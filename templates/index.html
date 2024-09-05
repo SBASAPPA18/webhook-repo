@@ -1,0 +1,28 @@
+<!-- Create a file: templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GitHub Webhook Events</title>
+    <script>
+        function fetchEvents() {
+            fetch('/events')
+                .then(response => response.json())
+                .then(data => {
+                    let eventList = document.getElementById('events');
+                    eventList.innerHTML = '';  // Clear previous data
+                    data.forEach(event => {
+                        let listItem = document.createElement('li');
+                        listItem.textContent = `${event.author} ${event.action.toLowerCase()} ${event.to_branch} on ${event.timestamp}`;
+                        eventList.appendChild(listItem);
+                    });
+                });
+        }
+
+        setInterval(fetchEvents, 15000);  // Poll every 15 seconds
+    </script>
+</head>
+<body>
+    <h1>Recent GitHub Webhook Events</h1>
+    <ul id="events"></ul>
+</body>
+</html>
