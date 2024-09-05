@@ -22,13 +22,56 @@ This project integrates GitHub actions with a Flask web application and MongoDB.
 
 ### 1. Clone Repositories
 
-Clone the repositories to your local machine:
+git clone https://github.com/your-username/webhook-repo.git
+cd webhook-repo
 
-```bash
-git clone <repository-url-for-action-repo>
-git clone <repository-url-for-webhook-repo>
+### 2. Create Virtual Environment
 
-## Set Up MongoDB
-[Click Here to Mangosh]("C:\Program Files\MongoDB\Server\7.0\bin\mongod.exe")
+python -m venv venv
 
- 
+### 3. Activate Virtual Environment
+venv\Scripts\activate
+
+### Install Dependency
+---
+pip install Flask pymongo waitress
+
+
+### Aplication Code
+---
+from flask import Flask, jsonify
+from pymongo import MongoClient, DESCENDING
+
+app = Flask(__name__)
+
+client = MongoClient('mongodb://localhost:27017/')
+db = client['your_database_name']
+
+@app.route('/events', methods=['GET'])
+def get_events():
+    events = db.github_events.find().sort('timestamp', DESCENDING)
+    return jsonify([event for event in events])
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+## Running Application
+---
+#### Start Application with Waitress
+
+waitress-serve --listen=127.0.0.1:5000 app:app
+
+## Access The Application
+---
+[link](http://127.0.0.1:5000/events
+)
+
+# Testing
+[link](curl http://127.0.0.1:5000/events
+)
+
+# Setup MangoDB
+
+Ensure that MongoDB is installed and running on your local machine. The default connection string used in the application is (mongodb://localhost:27017/.) Modify this string in app.py if your MongoDB instance is running elsewhere.
+
+
